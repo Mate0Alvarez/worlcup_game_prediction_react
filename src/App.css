@@ -1,3 +1,7 @@
+*{
+  font-family: 'Poppins', sans-serif;
+}
+
 .App {
   text-align: center;
 }
@@ -9,12 +13,12 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: App-logo-spin infinite 5s linear;
   }
 }
 
 .App-header {
-  background-color: #282c34;
+  background-color: #9a1032;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -30,9 +34,12 @@
 
 @keyframes App-logo-spin {
   from {
-    transform: rotate(0deg);
+    transform: scale(.8);
+  }
+  50% {
+    transform: scale(1.2);
   }
   to {
-    transform: rotate(360deg);
+    transform: scale(.8);
   }
 }
