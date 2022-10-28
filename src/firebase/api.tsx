@@ -1,3 +1,4 @@
+import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import {
     collection,
     doc,
@@ -11,13 +12,14 @@ import {
 } from "firebase/firestore";
 import { IGames } from "../types/types";
 import { db } from "./firebase_connection";
+import { auth } from "./firebase_connection";
 
 export const getGames = async (): Promise<IGames[] | undefined> => {
     const gamesCollection = query(
         collection(db, "games"),
         orderBy("date")
     );
-    
+
 
     try {
         const res = await getDocs(gamesCollection);
@@ -38,6 +40,44 @@ export const getGames = async (): Promise<IGames[] | undefined> => {
         console.log("Something happended", error);
     }
 };
+
+export const registerWithEmailAndPassword = async (name: string, email: string, password: string): Promise <void> => {
+    try {
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        const user = res.user;
+
+        await addDoc(collection(db,"users"),{
+            uid: user.uid,
+            name,
+            authProvider: "local",
+            email
+        });
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const logInWithEmailAndPassword = async (email: string, password: string): Promise<void> => {
+    try {
+        await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const logout = async (): Promise <void> => {
+    signOut(auth);
+}
+
+export const sendPasswordReset = async (email: string):Promise <boolean> => {
+    try {
+        await sendPasswordResetEmail(auth,email);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+}
 
 /* export const getCategories = async () => {
     const categoriesCollection = collection(db, "categories");
