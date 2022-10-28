@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import QatarTheme from './components/themes/QatarTheme';
 import NavBar from './components/NavBar/NavBar';
 import GamesContainer from './components/Games/GamesContainer';
+import SignUpSide from './components/Register/SignUp';
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import SignInSide from './components/Login/singIn';
 
@@ -14,6 +15,7 @@ function App() {
         <NavBar></NavBar>
         <Routes>
           <Route path="/games" element={<GamesContainer /> }/>
+          <Route path="/signup" element={<SignUpSide /> }/>
           <Route path="*" element={<SignInSide />} />
         </Routes>
       </ThemeProvider>

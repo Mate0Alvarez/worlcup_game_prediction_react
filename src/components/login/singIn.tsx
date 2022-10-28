@@ -110,7 +110,7 @@ export default function SignInSide() {
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="/singup" variant="body2" sx={{color: 'secondary.light'}}>
+                                    <Link href="/signup" variant="body2" sx={{color: 'secondary.light'}}>
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>

@@ -17,6 +17,9 @@ const QatarTheme = createTheme(
             info: {
                 main: '#07c7cc',
             },
+            error: {
+                main: '#eed202',
+            }
         },
         typography: {
             fontFamily: 'Poppins',

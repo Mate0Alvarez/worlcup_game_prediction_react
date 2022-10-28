@@ -23,6 +23,13 @@ export interface IGames {
     date: IFirebaseDate
 }
 
+export interface IFormErrors{
+    name: boolean;
+    email: boolean;
+    password: boolean;
+    confirm_password: boolean;
+}
+
 
 
 
