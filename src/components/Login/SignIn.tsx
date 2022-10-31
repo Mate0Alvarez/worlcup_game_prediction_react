@@ -1,5 +1,3 @@
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
@@ -10,7 +8,13 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import * as React from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AppCtx } from '../../context/ProdeContext';
+import { ISignInFormErrors } from '../../interfaces/interfaces';
+import { ProdeContextType } from '../../types/types';
+import SnackbarPush from '../utils/SnackbarPush';
+import SingInFormValidation from './SignInFormValidation';
 
 function Copyright(props: any) {
     return (
@@ -26,16 +30,62 @@ function Copyright(props: any) {
 }
 
 export default function SignInSide() {
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
+    const { userData, logInUser, handleSetShowNavBar } = useContext(AppCtx) as ProdeContextType;
+
+    const [formErrors, setFormErrors] = useState<ISignInFormErrors>({
+        email: false,
+        password: false
+    })
+    const [loginError, setLoginError] = useState<boolean>(false);
+
+    const navigate = useNavigate();
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        console.log({
+
+        resetFormErrors();
+
+        const formValidation = await SingInFormValidation({
             email: data.get('email'),
-            password: data.get('password'),
-        });
+            password: data.get('password')
+        })
+
+        if (!formValidation.validForm) {
+            return setFormErrors(formValidation.newFormErrors);
+        }
+
+        const logged = await logInUser(formValidation.formData.email, formValidation.formData.password);
+
+        if (!logged) {
+            return setLoginError(true);
+        }
+        return navigate('/fixture');
     };
 
+    const resetFormErrors = () => {
+        return setFormErrors({
+            email: false,
+            password: false
+        })
+    }
+
+    useEffect(() => {
+        if (userData) {
+            return navigate('/fixture');
+        }
+
+        handleSetShowNavBar(false);
+    }, [userData])
+
+
     return (
+        <>
+            {loginError && (
+                <SnackbarPush text_error='Ups! Invalid user email or password' severity='error'></SnackbarPush>
+            )}
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -62,9 +112,15 @@ export default function SignInSide() {
                             alignItems: 'center',
                         }}
                     >
-                        <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
+                        <Box
+                            sx={{
+                                m: 1,
+                                width: "120px",
+                            }}
+                            component="img"
+                            alt="Qatar Wolrd Cup 2022."
+                            src="/qatar_logo.svg"
+                        />
                         <Typography component="h1" variant="h5">
                             Sign in
                         </Typography>
@@ -79,6 +135,8 @@ export default function SignInSide() {
                                 autoComplete="email"
                                 autoFocus
                                 color='secondary'
+                                helperText={formErrors.email && "Please enter a your e-mail address"}
+                                error={formErrors.email}
                             />
                             <TextField
                                 margin="normal"
@@ -90,6 +148,8 @@ export default function SignInSide() {
                                 id="password"
                                 autoComplete="current-password"
                                 color='secondary'
+                                helperText={formErrors.password && "Please enter your password"}
+                                error={formErrors.password}
                             />
                             <FormControlLabel
                                 control={<Checkbox value="remember" color="secondary" />}
@@ -105,12 +165,12 @@ export default function SignInSide() {
                             </Button>
                             <Grid container>
                                 <Grid item xs>
-                                    <Link href="#" variant="body2" sx={{color: 'secondary.light'}}>
+                                    <Link href="#" variant="body2" sx={{ color: 'secondary.light' }}>
                                         Forgot password?
                                     </Link>
                                 </Grid>
                                 <Grid item>
-                                    <Link href="/signup" variant="body2" sx={{color: 'secondary.light'}}>
+                                    <Link href="/signup" variant="body2" sx={{ color: 'secondary.light' }}>
                                         {"Don't have an account? Sign Up"}
                                     </Link>
                                 </Grid>
@@ -120,5 +180,6 @@ export default function SignInSide() {
                     </Box>
                 </Grid>
             </Grid>
+        </>
     );
 }

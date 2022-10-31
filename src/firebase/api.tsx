@@ -1,25 +1,19 @@
-import { createUserWithEmailAndPassword, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import {
-    collection,
-    doc,
-    getDoc,
-    getDocs,
-    addDoc,
-    query,
-    where,
-    limit,
-    orderBy,
+    createUserWithEmailAndPassword,
+    sendPasswordResetEmail,
+    signInWithEmailAndPassword,
+    signOut
+} from "firebase/auth";
+import {
+    addDoc, collection, getDocs, limit,
+    orderBy, query,
+    where
 } from "firebase/firestore";
-import { IGames } from "../types/types";
-import { db } from "./firebase_connection";
-import { auth } from "./firebase_connection";
+import { IGames, IUser, IUserPredictionSaved } from "../interfaces/interfaces";
+import { auth, db } from "./firebase_connection";
 
 export const getGames = async (): Promise<IGames[] | undefined> => {
-    const gamesCollection = query(
-        collection(db, "games"),
-        orderBy("date")
-    );
-
+    const gamesCollection = query(collection(db, "games"), orderBy("date"));
 
     try {
         const res = await getDocs(gamesCollection);
@@ -41,43 +35,104 @@ export const getGames = async (): Promise<IGames[] | undefined> => {
     }
 };
 
-export const registerWithEmailAndPassword = async (name: string, email: string, password: string): Promise <void> => {
+export const registerWithEmailAndPassword = async (
+    name: string,
+    email: string,
+    password: string
+): Promise<void> => {
     try {
         const res = await createUserWithEmailAndPassword(auth, email, password);
         const user = res.user;
 
-        await addDoc(collection(db,"users"),{
+        await addDoc(collection(db, "users"), {
             uid: user.uid,
             name,
             authProvider: "local",
-            email
+            email,
         });
     } catch (error) {
         console.error(error);
     }
-}
+};
 
-export const logInWithEmailAndPassword = async (email: string, password: string): Promise<void> => {
-    try {
-        await signInWithEmailAndPassword(auth, email, password);
-    } catch (error) {
-        console.error(error);
-    }
-}
+export const logInWithEmailAndPassword = async (
+    email: string,
+    password: string
+): Promise<string> => {
+    const user = await signInWithEmailAndPassword(auth, email, password);
 
-export const logout = async (): Promise <void> => {
+    return user.user.uid;
+};
+
+export const logout = async (): Promise<void> => {
     signOut(auth);
-}
+};
 
-export const sendPasswordReset = async (email: string):Promise <boolean> => {
+export const sendPasswordReset = async (email: string): Promise<boolean> => {
     try {
-        await sendPasswordResetEmail(auth,email);
+        await sendPasswordResetEmail(auth, email);
         return true;
     } catch (error) {
         console.error(error);
         return false;
     }
-}
+};
+
+export const getUser = async (
+    uid: string | undefined
+): Promise<IUser | null> => {
+    try {
+        if (uid === undefined) return null;
+
+        const userCollection = query(
+            collection(db, "users"),
+            where("uid", "==", uid),
+            limit(1)
+        );
+
+        const res = await getDocs(userCollection);
+        if (res.size) {
+            const user = res.docs.map((c) => ({
+                id: c.id,
+                name: c.data().name,
+                email: c.data().email,
+            }));
+            return user[0];
+        } else {
+            return null;
+        }
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+};
+
+export const getUserPredictions = async (
+    user_id: string
+): Promise<IUserPredictionSaved[] | []> => {
+    const userPredictionsCollection = query(
+        collection(db, "predictions"),
+        where("user_id", "==", user_id),
+        limit(1)
+    );
+
+    try {
+        const res = await getDocs(userPredictionsCollection);
+
+        const predictions = res.docs.map((c) => ({
+            game_id: c.data().game_id,
+            local_score: c.data().result.local_score,
+            visitor_score: c.data().result.visitor_score,
+            result: c.data().result.result,
+        }));
+
+        return predictions;
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+};
+
 
 /* export const getCategories = async () => {
     const categoriesCollection = collection(db, "categories");

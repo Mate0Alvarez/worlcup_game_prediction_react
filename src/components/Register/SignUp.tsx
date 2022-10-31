@@ -6,11 +6,13 @@ import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { useState } from 'react';
-import { IFormErrors } from '../../types/types';
-import SignUpFormValidation from './SignUpFormValidation';
-import {registerWithEmailAndPassword, logInWithEmailAndPassword} from '../../firebase/api';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { AppCtx } from '../../context/ProdeContext';
+import { registerWithEmailAndPassword } from '../../firebase/api';
+import { IFormErrors } from '../../interfaces/interfaces';
+import { ProdeContextType } from '../../types/types';
+import SignUpFormValidation from './SignUpFormValidation';
 
 function Copyright(props: any) {
     return (
@@ -33,31 +35,32 @@ export default function SignUpSide() {
         confirm_password: false
     });
 
+    const { userData, logInUser, handleSetShowNavBar } = useContext(AppCtx) as ProdeContextType;
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
             const data = new FormData(event.currentTarget);
-    
+
             resetFormErrors()
-    
+
             const formValidation = await SignUpFormValidation({
                 name: data.get('name'),
                 email: data.get('email'),
                 password: data.get('password'),
                 confirm_password: data.get('confirm_password')
             })
-    
+
             if (!formValidation.validForm) {
                 return setFormErrors(formValidation.newFormErrors);
             }
-    
+
             await registerWithEmailAndPassword(formValidation.formData.name, formValidation.formData.email, formValidation.formData.password);
-    
-            await logInWithEmailAndPassword(formValidation.formData.email, formValidation.formData.password);
-            
-            navigate('/games');
+
+            await logInUser(formValidation.formData.email, formValidation.formData.password);
+
+            navigate('/fixture');
 
         } catch (error) {
             console.error(error);
@@ -72,6 +75,13 @@ export default function SignUpSide() {
             confirm_password: false
         });
     }
+
+    useEffect(() => {
+        if (userData) {
+            return navigate('/fixture');
+        }
+        handleSetShowNavBar(false);
+    }, [userData])
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>

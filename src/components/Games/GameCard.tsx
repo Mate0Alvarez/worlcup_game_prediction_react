@@ -1,10 +1,13 @@
 import Box from "@mui/material/Box";
-import Button from '@mui/material/Button';
-import CardActions from '@mui/material/CardActions';
+import Button from "@mui/material/Button";
+import CardActions from "@mui/material/CardActions";
 import Grid from "@mui/material/Grid";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { IGames } from "../../types/types";
+import { IGameResponse, IGames } from "../../interfaces/interfaces";
+import {useState, useContext} from 'react';
+import {AppCtx} from '../../context/ProdeContext';
+import {ProdeContextType} from '../../types/types';
 import "./GameCard.css";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
 
@@ -19,19 +22,65 @@ export interface ICountryContainer {
 
 const CountryContainer = (props: ICountryContainer) => {
     return (
-        <Box sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column"
-        }}>
-            <Typography variant="h6" sx={{ mb: 2 }}>{props.name}</Typography>
+        <Box
+            sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+            }}
+        >
+            <Typography variant="h6" sx={{ mb: 2 }}>
+                {props.name}
+            </Typography>
             <div className={props.flag}></div>
         </Box>
     );
 };
 
 const GameCard = (props: IGameCardProps): JSX.Element => {
+    const { userData, savePrediction } = useContext(AppCtx) as ProdeContextType;
+
+    const [showSavePridctionButton, setshowSavePridctionButton] =
+        useState<boolean>(true);
+    const [local_score, setLocal_score] = useState<string>('');
+    const [visitor_score, setVisitor_score] = useState<string>('');
+
+    const handleLocalScoreChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
+        setLocal_score(event.target.value);
+    }
+
+    const handleVisitorScoreChange = (event: React.ChangeEvent<HTMLInputElement> ) => {
+        setVisitor_score(event.target.value);
+    }
+
+    const getResult = (local_score: string, visitor_score: string ) => {
+        if (local_score > visitor_score) {
+            return 'L';
+        }
+        if (local_score < visitor_score) {
+            return 'V';
+        }
+        return 'D';
+    }
+    
+    const handleSavePrediction = async() => {
+        const prediction: IGameResponse = {
+            user_id: userData.id,
+            game_id: props.game.id,
+            result: {
+                local_score: local_score,
+                visitor_score: visitor_score,
+                result: getResult(local_score, visitor_score)
+            }
+        }
+
+        const predictionSaved = await savePrediction(prediction);
+        if (!predictionSaved) {
+            
+        }
+    }
+
     const local_flag = `fi fi-${props.game.local_code} fis flagImage`;
     const visitor_flag = `fi fi-${props.game.visitor_code} fis flagImage`;
     const date = new Date(props.game.date.seconds * 1000);
@@ -63,6 +112,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                                 id="filled-hidden-label-normal"
                                 defaultValue={props.game.local_score}
                                 variant="filled"
+                                onChange={handleLocalScoreChange}
                             />
                         </Grid>
                         <Grid
@@ -82,6 +132,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                                 id="filled-hidden-label-normal"
                                 defaultValue={props.game.visitor_score}
                                 variant="filled"
+                                onChange={handleVisitorScoreChange}
                             />
                         </Grid>
                     </Grid>
@@ -89,8 +140,17 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                 <CountryContainer name={props.game.visitor} flag={visitor_flag} />
             </Box>
             <CardActions>
-                <Button size="large" color="secondary">Status: {props.game.status}</Button>
-                <Button size="large" variant="outlined" color="secondary">Save prediction</Button>
+                <Button size="small" color="secondary">
+                    Status: {props.game.status}
+                </Button>
+                <Button size="small" color="success">
+                    You won 3 points!
+                </Button>
+                {showSavePridctionButton && (
+                    <Button size="small" variant="outlined" color="secondary" onClick={handleSavePrediction}>
+                        Save prediction
+                    </Button>
+                )}
             </CardActions>
         </Box>
     );

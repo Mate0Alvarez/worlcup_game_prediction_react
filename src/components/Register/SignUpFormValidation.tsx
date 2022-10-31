@@ -1,5 +1,4 @@
-import React from 'react'
-import { IFormErrors } from '../../types/types';
+import { IFormErrors } from '../../interfaces/interfaces';
 
 export interface ISignUpFormValidationData {
     name: FormDataEntryValue | null;

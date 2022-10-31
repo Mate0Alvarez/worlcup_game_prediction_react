@@ -1,25 +1,48 @@
-import React from 'react';
-import './App.css';
-import { ThemeProvider } from '@mui/material/styles';
-import QatarTheme from './components/themes/QatarTheme';
-import NavBar from './components/NavBar/NavBar';
-import GamesContainer from './components/Games/GamesContainer';
-import SignUpSide from './components/Register/SignUp';
+import { ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import SignInSide from './components/Login/singIn';
+import "./App.css";
+import GamesContainer from "./components/Games/GamesContainer";
+import SignInSide from "./components/Login/SignIn";
+import NavBar from "./components/NavBar/NavBar";
+import SignUpSide from "./components/Register/SignUp";
+import QatarTheme from "./components/themes/QatarTheme";
+import ProdeContext from "./context/ProdeContext";
 
 function App() {
   return (
-    <Router>
-      <ThemeProvider theme={QatarTheme}>
-        <NavBar></NavBar>
-        <Routes>
-          <Route path="/games" element={<GamesContainer /> }/>
-          <Route path="/signup" element={<SignUpSide /> }/>
-          <Route path="*" element={<SignInSide />} />
-        </Routes>
-      </ThemeProvider>
-    </Router>
+    <ProdeContext>
+      <Router>
+        <ThemeProvider theme={QatarTheme}>
+          <NavBar></NavBar>
+          <Routes>
+            <Route
+              path="/fixture"
+              element={
+                <GamesContainer />
+              }
+            />
+            <Route
+              path="/signin"
+              element={
+                <SignInSide />
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <SignUpSide />
+              }
+            />
+            <Route
+              path="*"
+              element={
+                <GamesContainer />
+              }
+            />
+          </Routes>
+        </ThemeProvider>
+      </Router>
+    </ProdeContext>
   );
 }
 
