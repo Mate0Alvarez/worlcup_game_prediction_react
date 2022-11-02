@@ -22,7 +22,7 @@ const QatarTheme = createTheme(
             }
         },
         typography: {
-            fontFamily: 'Poppins',
+            fontFamily: 'Qatar'
         },
     }
 )

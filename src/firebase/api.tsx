@@ -14,7 +14,8 @@ import {
     IGameResponse,
     IGames,
     IUser,
-    IUserPredictionSaved
+    IUserPredictionSaved,
+    IUserWithPoints
 } from "../interfaces/interfaces";
 import { auth, db } from "./firebase_connection";
 
@@ -57,6 +58,7 @@ export const registerWithEmailAndPassword = async (
             name,
             authProvider: "local",
             email,
+            points: 0
         });
     } catch (error) {
         console.error(error);
@@ -115,6 +117,30 @@ export const getUser = async (
     }
 };
 
+export const getUserPoints = async (): Promise<IUserWithPoints[] | []> => {
+    try {
+
+        const usersCollection = query(
+            collection(db, "users")
+        );
+
+        const res = await getDocs(usersCollection);
+        if (res.size) {
+            const users = res.docs.map((c) => ({
+                name: c.data().name,
+                email: c.data().email,
+                points: c.data().points
+            }));
+            return users;
+        }
+        
+        return [];
+    } catch (error) {
+        console.error(error);
+        return [];
+    }
+}
+
 export const getUserPredictions = async (
     user_id: string | undefined
 ): Promise<IUserPredictionSaved[] | []> => {
@@ -166,6 +192,14 @@ export const updatePredictionInFirebase = async (prediction: IUserPredictionSave
 export const loadGame = async (game: Object): Promise<void> => {
     const gamesCollection = collection(db, "games");
     await addDoc(gamesCollection, game);
+}
+
+export const updateGame = async (game_id: string): Promise<void> => {
+    const gameRef = doc(db, "games", game_id);
+
+    await updateDoc(gameRef, {
+        status: "open"
+    })
 }
 
 /* export const getCategories = async () => {

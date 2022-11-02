@@ -1,5 +1,13 @@
-*{
-  font-family: 'Poppins', sans-serif;
+@font-face {
+  font-family: "Qatar";
+  src:
+    url("./fonts/Qatar2022Arabic-Bold.ttf") format("opentype"),
+    url("./fonts/Qatar2022Arabic-Heavy.ttf") format("opentype"),
+    url("./fonts/GraphikArabicMedium.otf") format("opentype");
+}
+
+* {
+  font-family: "Qatar", "Poppins", sans-serif;
 }
 
 .App {
@@ -34,12 +42,14 @@
 
 @keyframes App-logo-spin {
   from {
-    transform: scale(.8);
+    transform: scale(0.8);
   }
+
   50% {
     transform: scale(1.2);
   }
+
   to {
-    transform: scale(.8);
+    transform: scale(0.8);
   }
 }

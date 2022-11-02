@@ -26,13 +26,17 @@ const SavePredictionComponent = ({
   const handleSavePrediction = async () => {
     setLoading(true);
 
+    const l_score = controlEmpty(local_score);
+    
+    const v_score = controlEmpty(visitor_score);
+
     const prediction: IGameResponse = {
       user_id: userData.id,
       game_id,
       result: {
-        local_score,
-        visitor_score,
-        result: getResult(local_score, visitor_score),
+        local_score: l_score,
+        visitor_score: v_score,
+        result: getResult(l_score, v_score),
       },
     };
 
@@ -45,6 +49,13 @@ const SavePredictionComponent = ({
     setLoading(false);
     return setPredicitionSuccess(true);
   };
+
+  const controlEmpty = (score:string) => {
+    if (score !== '') {
+      return score;
+    }
+    return '0';
+  }
 
   const getResult = (local_score: string, visitor_score: string) => {
     if (local_score > visitor_score) {

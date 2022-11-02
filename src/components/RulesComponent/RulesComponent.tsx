@@ -68,7 +68,7 @@ const RulesComponent = () => {
                                 <FiberManualRecordIcon />
                             </ListItemIcon>
                             <ListItemText
-                                primary="In case you guess the number of goals of a team you will add 1 point per guess. In this way, if you guess the result and the exact number of goals of a team, you will add 4 points in total."
+                                primary="In case you guess the number of goals of a team you will add 1 point per guess. In this way, if you guess the result and the exact number of goals of the both teams, you will win 4 points in total."
                             />
                         </ListItem>
                     </List>

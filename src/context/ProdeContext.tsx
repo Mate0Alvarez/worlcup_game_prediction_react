@@ -3,11 +3,12 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import {
     getGames,
     getUser,
+    getUserPoints,
     getUserPredictions,
     logInWithEmailAndPassword,
     logout,
     savePredictionInFirebase,
-    updatePredictionInFirebase,
+    updatePredictionInFirebase
 } from "../firebase/api";
 import { auth } from "../firebase/firebase_connection";
 import {
@@ -15,6 +16,7 @@ import {
     IGames,
     IUser,
     IUserPredictionSaved,
+    IUserWithPoints
 } from "../interfaces/interfaces";
 
 export const AppCtx = createContext({});
@@ -152,6 +154,10 @@ export const ProdeContext = ({ children }: Props) => {
         return games;
     };
 
+    const getUsersWithPoints = async(): Promise<IUserWithPoints[] | []> => {
+        return await getUserPoints();
+    }
+
     useEffect(() => {
         getUserDataFromLocalStorage();
         getUserPredictionsFromLocalFirebase();
@@ -171,7 +177,8 @@ export const ProdeContext = ({ children }: Props) => {
                 showFooter,
                 setShowNavBarAndFooter,
                 qatarGames,
-                getGamesByDate
+                getGamesByDate,
+                getUsersWithPoints
             }}
         >
             {children}

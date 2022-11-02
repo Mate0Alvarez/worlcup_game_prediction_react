@@ -8,19 +8,23 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import { useContext, useState } from 'react';
-import { AppCtx } from '../../context/ProdeContext';
-import { ProdeContextType } from '../../types/types';
+import { useContext, useState } from "react";
+import { AppCtx } from "../../context/ProdeContext";
+import { ProdeContextType } from "../../types/types";
 import UserIcon from "../User/UserIcon/UserIcon";
 import { Link, LinkProps } from "react-router-dom";
+import LoginIconComponent from "../Login/LoginIconComponent";
 
 const LinkWithoutDecoration = (props: LinkProps) => {
-    return <Link {...props} style={{ textDecoration: "none", color: "unset" }}></Link>
+    return (
+        <Link {...props} style={{ textDecoration: "none", color: "unset" }}></Link>
+    );
 };
 
 const pages = [
+    <LinkWithoutDecoration to="/">Prode</LinkWithoutDecoration>,
     <LinkWithoutDecoration to="/positions">Positions</LinkWithoutDecoration>,
-    <LinkWithoutDecoration to="/rules">Rules</LinkWithoutDecoration>
+    <LinkWithoutDecoration to="/rules">Rules</LinkWithoutDecoration>,
 ];
 
 const NavBar = () => {
@@ -31,7 +35,6 @@ const NavBar = () => {
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
-
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
@@ -53,25 +56,6 @@ const NavBar = () => {
                                 alt="Qatar Wolrd Cup 2022."
                                 src="/qatar_logo.svg"
                             />
-                            <Typography
-                                variant="h6"
-                                noWrap
-                                component="a"
-                                href="/"
-                                sx={{
-                                    mr: 2,
-                                    display: { xs: "none", md: "flex" },
-                                    fontFamily: "Poppins",
-                                    fontWeight: 700,
-                                    letterSpacing: ".1rem",
-                                    color: "inherit",
-                                    textDecoration: "none",
-                                    textTransform: "uppercase",
-                                }}
-                            >
-                                Prode
-                            </Typography>
-
                             <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                                 <IconButton
                                     size="large"
@@ -103,7 +87,7 @@ const NavBar = () => {
                                 >
                                     {pages.map((page, index) => (
                                         <MenuItem key={index} onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center" >{page}</Typography>
+                                            <Typography textAlign="center">{page}</Typography>
                                         </MenuItem>
                                     ))}
                                 </Menu>
@@ -130,7 +114,7 @@ const NavBar = () => {
                                     </Button>
                                 ))}
                             </Box>
-
+                            {!userData && <LoginIconComponent />}
                             {userData && <UserIcon />}
                         </Toolbar>
                     </Container>

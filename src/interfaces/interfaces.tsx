@@ -1,3 +1,4 @@
+import {Dayjs} from 'dayjs';
 export interface IUserPrediction {
     local_score: string;
     visitor_score: string;
@@ -63,4 +64,17 @@ export interface IPrediction {
     id: string;
     user_id: string;
     game_id: string;
+}
+
+export interface IDatePickerBox {
+    dayValue: Dayjs | null;
+    handleChange: (newValue: Dayjs | null) => Promise<void>;
+    handleBack: () => Promise<void>;
+    handleForward: () => Promise <void>;
+}
+
+export interface IUserWithPoints {
+    email: string,
+    name: string,
+    points: number
 }

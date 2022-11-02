@@ -30,7 +30,7 @@ function Copyright(props: any) {
 
 export default function SignInSide() {
 
-    const { userData, logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
+    const { logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
 
     const [formErrors, setFormErrors] = useState<ISignInFormErrors>({
         email: false,
@@ -74,12 +74,8 @@ export default function SignInSide() {
     }
 
     useEffect(() => {
-        if (userData) {
-            return navigate('/fixture');
-        }
-
         setShowNavBarAndFooter(false);
-    }, [userData])
+    }, [])
 
 
     return (

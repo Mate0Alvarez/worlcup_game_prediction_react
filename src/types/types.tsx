@@ -1,4 +1,4 @@
-import { IUser, IGameResponse, IUserPredictionSaved, IGames } from '../interfaces/interfaces';
+import { IUser, IGameResponse, IUserPredictionSaved, IGames, IUserWithPoints } from '../interfaces/interfaces';
 
 export type ProdeContextType = {
     userData: IUser;
@@ -12,5 +12,6 @@ export type ProdeContextType = {
     updateUserPrediction: (prediction: IUserPredictionSaved) => Promise<boolean>;
     setShowNavBarAndFooter: (showNavBarProp: boolean) => Promise<void>;
     qatarGames: IGames[];
-    getGamesByDate: (date: string) => Promise<IGames[] | []>
+    getGamesByDate: (date: string) => Promise<IGames[] | []>;
+    getUsersWithPoints: () => Promise<IUserWithPoints[] | []>;
 }

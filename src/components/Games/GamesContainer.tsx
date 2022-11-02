@@ -1,15 +1,13 @@
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import { useEffect, useState, useContext } from "react";
-import { getGames } from "../../firebase/api";
-import { IGames } from "../../interfaces/interfaces";
-import GameCard from "./GameCard";
-import { AppCtx } from "../../context/ProdeContext";
-import { ProdeContextType } from "../../types/types";
-import DatePicker from "../DatePicker/DatePicker";
-import dayjs from "dayjs";
-import { Dayjs } from "dayjs";
+import Grid from "@mui/material/Grid";
+import dayjs, { Dayjs } from "dayjs";
 import * as React from "react";
+import { useContext, useEffect, useState } from "react";
+import { AppCtx } from "../../context/ProdeContext";
+import { IGames } from "../../interfaces/interfaces";
+import { ProdeContextType } from "../../types/types";
+import DatePickerContainer from "../DatePicker/DatePickerContainer";
+import GameCard from "./GameCard";
 import GameSkeleton from "./GameSkeleton/GameSkeleton";
 
 const GamesContainer = (): JSX.Element | null => {
@@ -45,6 +43,15 @@ const GamesContainer = (): JSX.Element | null => {
         }
     }, [qatarGames, dayValue]);
 
+    useEffect(() => {
+        if (games?.length) {
+            setTimeout(() => {
+                setLoadingGames(false);
+            }, 500);
+        }
+    }, [games])
+
+
     return (
         <Box
             sx={{
@@ -65,11 +72,11 @@ const GamesContainer = (): JSX.Element | null => {
                 columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                 sx={{
                     justifyContent: "center",
-                    mb:5
+                    mb: 5
                 }}
             >
                 <Grid xs={10} md={4} item>
-                    <DatePicker
+                    <DatePickerContainer
                         dayValue={dayValue}
                         setDayValue={setDayValue}
                         setLoadingGames={setLoadingGames}

@@ -2,6 +2,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -13,7 +14,6 @@ import { registerWithEmailAndPassword } from '../../firebase/api';
 import { IFormErrors } from '../../interfaces/interfaces';
 import { ProdeContextType } from '../../types/types';
 import SignUpFormValidation from './SignUpFormValidation';
-import LinearProgress from '@mui/material/LinearProgress';
 
 function Copyright(props: any) {
     return (
@@ -36,7 +36,7 @@ export default function SignUpSide() {
         confirm_password: false
     });
 
-    const { userData, logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
+    const { logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
     const [loading, setloading] = useState<boolean>(false)
 
     const navigate = useNavigate();
@@ -83,11 +83,8 @@ export default function SignUpSide() {
     }
 
     useEffect(() => {
-        if (userData) {
-            return navigate('/fixture');
-        }
         setShowNavBarAndFooter(false);
-    }, [userData])
+    }, [])
 
     return (
         <Grid container component="main" sx={{ height: '100vh' }}>

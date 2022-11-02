@@ -58,12 +58,18 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
     const handleLocalScoreChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
+        if (event.target.value === "") {
+            return setLocal_score("0");
+        }
         setLocal_score(event.target.value);
     };
 
     const handleVisitorScoreChange = (
         event: React.ChangeEvent<HTMLInputElement>
     ) => {
+        if (event.target.value === "") {
+            return setVisitor_score("0");
+        }
         setVisitor_score(event.target.value);
     };
 
@@ -116,16 +122,16 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                     padding: "20px 35px 10px",
                 }}
             >
-                <Box 
-                sx={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center"
-                }}>
-                <Typography variant="h5">{date.toLocaleString()}</Typography>
-                <Typography variant="body1" color="secondary" sx={{textTransform: "uppercase"}}>Status: {props.game.status}</Typography>
+                <Box
+                    sx={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center"
+                    }}>
+                    <Typography variant="h5">{date.toLocaleString()}</Typography>
+                    <Typography variant="body1" color="secondary" sx={{ textTransform: "uppercase" }}>Status: {props.game.status}</Typography>
                 </Box>
-                
+
                 <Box
                     sx={{
                         mt: 2,
@@ -145,7 +151,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                                     variant="filled"
                                     onChange={handleLocalScoreChange}
                                     disabled={editDisabled}
-                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                    inputProps={{ type: 'number', min: 0, style: { textAlign: 'center' } }}
                                 />
                             </Grid>
                             <Grid
@@ -167,14 +173,14 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                                     variant="filled"
                                     onChange={handleVisitorScoreChange}
                                     disabled={editDisabled}
-                                    inputProps={{min: 0, style: { textAlign: 'center' }}}
+                                    inputProps={{ type: 'number', min: 0, style: { textAlign: 'center' }, className: 'predicitonInput' }}
                                 />
                             </Grid>
                         </Grid>
                     </Box>
                     <CountryContainer name={props.game.visitor} flag={visitor_flag} />
                 </Box>
-                <CardActions sx={{mt:2, textAlign: "right"}}>
+                <CardActions sx={{ mt: 2, textAlign: "right" }}>
 
                     {props.game.status === "finished" && (
                         <Button color="success">
@@ -182,7 +188,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                         </Button>
                     )}
                     {!userPrediction && (
-                        <SavePredictionComponent 
+                        <SavePredictionComponent
                             game_id={props.game.id}
                             local_score={local_score}
                             visitor_score={visitor_score}
@@ -198,7 +204,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                         </Button>
                     )}
                     {updatePrediction && (
-                        <UpdatePredictionComponent 
+                        <UpdatePredictionComponent
                             userPrediction={userPrediction}
                             local_score={local_score}
                             visitor_score={visitor_score}
