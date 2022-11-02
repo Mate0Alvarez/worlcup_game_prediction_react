@@ -8,7 +8,10 @@ import {
     logInWithEmailAndPassword,
     logout,
     savePredictionInFirebase,
-    updatePredictionInFirebase
+    updatePredictionInFirebase,
+    setPredictionPoints,
+    setUserPoints,
+    setNewGameStatus
 } from "../firebase/api";
 import { auth } from "../firebase/firebase_connection";
 import {
@@ -104,7 +107,7 @@ export const ProdeContext = ({ children }: Props) => {
         setUserPredictions([]);
     };
 
-    const getUserPredictionsFromLocalFirebase = async (): Promise<void> => {
+    const getUserPredictionsFromFirebase = async (): Promise<void> => {
         if (!user) {
             return;
         }
@@ -158,9 +161,22 @@ export const ProdeContext = ({ children }: Props) => {
         return await getUserPoints();
     }
 
+    const setUserPredictionPoints = async(prediction_id: string, points: number): Promise<void> => {
+        await setPredictionPoints(prediction_id, points);
+
+        if (userData?.id) {
+            await setUserPoints(userData.id, points);
+        }
+        await getUserPredictionsFromFirebase();
+    }
+
+    const setGameStatus = async(game_id: string, status: string): Promise <void> => {
+        await setNewGameStatus(game_id, status);
+    }
+
     useEffect(() => {
         getUserDataFromLocalStorage();
-        getUserPredictionsFromLocalFirebase();
+        getUserPredictionsFromFirebase();
         getGamesFromFirebase();
     }, [loading]);
 
@@ -178,7 +194,9 @@ export const ProdeContext = ({ children }: Props) => {
                 setShowNavBarAndFooter,
                 qatarGames,
                 getGamesByDate,
-                getUsersWithPoints
+                getUsersWithPoints,
+                setUserPredictionPoints,
+                setGameStatus
             }}
         >
             {children}

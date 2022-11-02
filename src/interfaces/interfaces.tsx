@@ -17,6 +17,7 @@ export interface IUserPredictionSaved {
     visitor_score: string;
     result: string;
     game_id: string;
+    points: number | null;
 }
 
 export interface IFirebaseDate {
@@ -39,9 +40,9 @@ export interface IGames {
 }
 
 export interface IUser {
-    id: string,
-    email: string,
-    name: string
+    id: string;
+    email: string;
+    name: string;
 }
 
 export interface IFormErrors {

@@ -27,6 +27,9 @@ const GamesContainer = (): JSX.Element | null => {
     };
     const getGames = async (date: string): Promise<void> => {
         setGames(await getGamesByDate(date));
+        setTimeout(() => {
+            setLoadingGames(false);
+        }, 3000);
     };
 
     useEffect(() => {
@@ -36,20 +39,16 @@ const GamesContainer = (): JSX.Element | null => {
 
     useEffect(() => {
         getGames(dayValue?.format("YYYY-MM-DD") || "");
-        if (games) {
-            setTimeout(() => {
-                setLoadingGames(false);
-            }, 500);
-        }
     }, [qatarGames, dayValue]);
 
     useEffect(() => {
         if (games?.length) {
             setTimeout(() => {
                 setLoadingGames(false);
-            }, 500);
+            }, 1000);
         }
     }, [games])
+
 
 
     return (

@@ -176,11 +176,6 @@ export default function SignInSide() {
                                 )}
                             </Button>
                             <Grid container>
-                                <Grid item xs>
-                                    <Link href="#" variant="body2" sx={{ color: 'secondary.light' }}>
-                                        Forgot password?
-                                    </Link>
-                                </Grid>
                                 <Grid item>
                                     <Link href="/signup" variant="body2" sx={{ color: 'secondary.light' }}>
                                         {"Don't have an account? Sign Up"}

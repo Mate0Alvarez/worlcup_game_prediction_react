@@ -13,6 +13,9 @@ export interface IUpdatePredictionComponentProps {
     visitor_score: string;
     setEditDisabled: Dispatch<SetStateAction<boolean>>;
     setUpdatePrediction: Dispatch<SetStateAction<boolean>>;
+    setPredictionError: Dispatch<SetStateAction<boolean>>;
+    setPredicitionSuccess: Dispatch<SetStateAction<boolean>>;
+    predictionEnabled: boolean;
 }
 
 const UpdatePredictionComponent = ({
@@ -21,14 +24,20 @@ const UpdatePredictionComponent = ({
     visitor_score,
     setEditDisabled,
     setUpdatePrediction,
+    setPredictionError,
+    setPredicitionSuccess,
+    predictionEnabled
 }: IUpdatePredictionComponentProps) => {
     const { updateUserPrediction } = useContext(AppCtx) as ProdeContextType;
-    const [predictionError, setPredictionError] = useState<boolean>(false);
-    const [predicitionSuccess, setPredicitionSuccess] = useState<boolean>(false);
+
     const [loading, setLoading] = useState<boolean>(false);
 
     const handleUpdatePrediction = async () => {
         setLoading(true);
+        if (!predictionEnabled) {
+            setLoading(false);
+            return setPredictionError(true);
+        }
 
         const prediction: IUserPredictionSaved = {
             prediction_id: userPrediction?.prediction_id || "",
@@ -36,6 +45,7 @@ const UpdatePredictionComponent = ({
             local_score,
             visitor_score,
             result: getResult(local_score, visitor_score),
+            points: null
         };
 
         const update = await updateUserPrediction(prediction);
@@ -67,18 +77,6 @@ const UpdatePredictionComponent = ({
 
     return (
         <>
-            {predictionError && (
-                <SnackbarPush
-                    text_error="Ups! Something happend updating your prediction, please try again later"
-                    severity="error"
-                />
-            )}
-            {predicitionSuccess && (
-                <SnackbarPush
-                    text_error="Prediction updated!"
-                    severity="primary"
-                ></SnackbarPush>
-            )}
             {!loading && (
                 <>
                     <Button

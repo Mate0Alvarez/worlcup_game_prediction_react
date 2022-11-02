@@ -29,7 +29,6 @@ const UserIcon = () => {
     };
 
     const settings = [
-        <Typography textAlign="center">Profile</Typography>,
         <Typography textAlign="center" onClick={handleLogout}>
             Logout
         </Typography>,

@@ -14,4 +14,6 @@ export type ProdeContextType = {
     qatarGames: IGames[];
     getGamesByDate: (date: string) => Promise<IGames[] | []>;
     getUsersWithPoints: () => Promise<IUserWithPoints[] | []>;
+    setUserPredictionPoints: (prediction_id: string, points: number) => Promise<void>;
+    setGameStatus: (game_id: string, status: string) => Promise<void>;
 }

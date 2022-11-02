@@ -10,6 +10,8 @@ import TableRow from "@mui/material/TableRow";
 import { useEffect, useState } from "react";
 import { IUserWithPoints } from "../../interfaces/interfaces";
 import PositionsTablePagination from "./PositionsTablePagination";
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 
 export interface IPositionsTableProps {
     users_with_points: IUserWithPoints[] | [];
@@ -18,8 +20,8 @@ export interface IPositionsTableProps {
 export default function PositionsTable({
     users_with_points,
 }: IPositionsTableProps) {
-    const [page, setPage] = useState(0);
-    const [rowsPerPage, setRowsPerPage] = useState(5);
+    const [page, setPage] = useState<number>(0);
+    const [rowsPerPage, setRowsPerPage] = useState<number>(5);
 
     // Avoid a layout jump when reaching the last page with empty rows.
     const emptyRows =
@@ -73,6 +75,18 @@ export default function PositionsTable({
                             </TableCell>
                         </TableRow>
                     ))}
+                    {
+                        users_with_points.length === 0 && (
+                            <TableRow>
+                                <TableCell colSpan={3}>
+                                    <Box sx={{ width: "100%" }}>
+                                        <LinearProgress sx={{ borderRadius: 5 }} />
+                                    </Box>
+                                </TableCell>
+
+                            </TableRow>
+                        )
+                    }
                     {emptyRows > 0 && (
                         <TableRow style={{ height: 53 * emptyRows }}>
                             <TableCell colSpan={6} />

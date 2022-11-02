@@ -1,5 +1,5 @@
 import { IGameResponse } from "../../../interfaces/interfaces";
-import { useContext, useState } from "react";
+import { useContext, useState, Dispatch, SetStateAction } from 'react';
 import { AppCtx } from "../../../context/ProdeContext";
 import { ProdeContextType } from "../../../types/types";
 import SnackbarPush from "../../utils/SnackbarPush";
@@ -11,32 +11,37 @@ export interface ISavePredictionComponentProps {
   game_id: string;
   local_score: string;
   visitor_score: string;
+  setPredictionError: Dispatch<SetStateAction<boolean>>;
+  setPredictionSuccess: Dispatch<SetStateAction<boolean>>;
+  predictionEnabled: boolean;
 }
 
 const SavePredictionComponent = ({
   game_id,
   local_score,
   visitor_score,
+  setPredictionError,
+  setPredictionSuccess,
+  predictionEnabled
 }: ISavePredictionComponentProps) => {
   const { userData, savePrediction } = useContext(AppCtx) as ProdeContextType;
-  const [predictionError, setPredictionError] = useState<boolean>(false);
-  const [predicitionSuccess, setPredicitionSuccess] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSavePrediction = async () => {
     setLoading(true);
 
-    const l_score = controlEmpty(local_score);
-    
-    const v_score = controlEmpty(visitor_score);
+    if (!predictionEnabled) {
+      setLoading(false);
+      return setPredictionError(true);
+    }
 
     const prediction: IGameResponse = {
       user_id: userData.id,
       game_id,
       result: {
-        local_score: l_score,
-        visitor_score: v_score,
-        result: getResult(l_score, v_score),
+        local_score,
+        visitor_score,
+        result: getResult(local_score, visitor_score),
       },
     };
 
@@ -47,15 +52,8 @@ const SavePredictionComponent = ({
     }
 
     setLoading(false);
-    return setPredicitionSuccess(true);
+    return setPredictionSuccess(true);
   };
-
-  const controlEmpty = (score:string) => {
-    if (score !== '') {
-      return score;
-    }
-    return '0';
-  }
 
   const getResult = (local_score: string, visitor_score: string) => {
     if (local_score > visitor_score) {
@@ -69,19 +67,6 @@ const SavePredictionComponent = ({
 
   return (
     <>
-      {predictionError && (
-        <SnackbarPush
-          text_error="Ups! Something happend saving your prediction, please try again later"
-          severity="error"
-        ></SnackbarPush>
-      )}
-      {predicitionSuccess && (
-        <SnackbarPush
-          text_error="Prediction saved!"
-          severity="primary"
-        ></SnackbarPush>
-      )}
-
       {!loading && (
         <Button
           variant="outlined"

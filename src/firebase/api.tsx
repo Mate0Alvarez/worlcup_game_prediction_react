@@ -158,6 +158,7 @@ export const getUserPredictions = async (
             local_score: c.data().result.local_score,
             visitor_score: c.data().result.visitor_score,
             result: c.data().result.result,
+            points: c.data().points
         }));
 
         return predictions;
@@ -176,7 +177,7 @@ export const savePredictionInFirebase = async (
 };
 
 export const updatePredictionInFirebase = async (prediction: IUserPredictionSaved): Promise<void> => {
-
+    
     const predictionRef = doc(db, "predictions", prediction.prediction_id);
 
     await updateDoc(predictionRef, {
@@ -199,6 +200,37 @@ export const updateGame = async (game_id: string): Promise<void> => {
 
     await updateDoc(gameRef, {
         status: "open"
+    })
+}
+
+export const setPredictionPoints = async (prediction_id: string, points: number): Promise <void> => {
+    const predictionsRef = doc(db, "predictions", prediction_id);
+
+    await updateDoc(predictionsRef, {
+        points
+    })
+}
+
+export const setUserPoints = async (user_id:string, points:number): Promise<void> => {
+    const userPredictionsCollection = query(
+        collection(db, "users"),
+        where("uid", "==", user_id)
+    );
+
+    const userDocs = await getDocs(userPredictionsCollection);
+
+    const userRef = doc(db, "users", userDocs.docs[0].id);
+
+    await updateDoc( userRef, {
+        points: userDocs.docs[0].data().points + points
+    })
+}
+
+export const setNewGameStatus = async (game_id: string, status: string): Promise <void> => {
+    const gameRef = doc(db, "games", game_id);
+
+    await updateDoc( gameRef, {
+        status
     })
 }
 
