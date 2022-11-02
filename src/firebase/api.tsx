@@ -5,15 +5,21 @@ import {
     signOut
 } from "firebase/auth";
 import {
-    addDoc, collection, getDocs, limit,
-    orderBy, query,
-    where
+    addDoc, collection, doc, getDocs,
+    limit,
+    orderBy,
+    query, updateDoc, where
 } from "firebase/firestore";
-import { IGames, IUser, IUserPredictionSaved } from "../interfaces/interfaces";
+import {
+    IGameResponse,
+    IGames,
+    IUser,
+    IUserPredictionSaved
+} from "../interfaces/interfaces";
 import { auth, db } from "./firebase_connection";
 
-export const getGames = async (): Promise<IGames[] | undefined> => {
-    const gamesCollection = query(collection(db, "games"), orderBy("date"));
+export const getGames = async (): Promise<IGames[] | []> => {
+    const gamesCollection = query(collection(db, "games"), orderBy("time_stamp"));
 
     try {
         const res = await getDocs(gamesCollection);
@@ -28,10 +34,12 @@ export const getGames = async (): Promise<IGames[] | undefined> => {
             status: c.data().status,
             final_result: c.data().final_result,
             date: c.data().date,
+            time_stamp: c.data().time_stamp
         }));
         return games;
     } catch (error) {
         console.log("Something happended", error);
+        return [];
     }
 };
 
@@ -93,7 +101,7 @@ export const getUser = async (
         const res = await getDocs(userCollection);
         if (res.size) {
             const user = res.docs.map((c) => ({
-                id: c.id,
+                id: c.data().uid,
                 name: c.data().name,
                 email: c.data().email,
             }));
@@ -108,18 +116,18 @@ export const getUser = async (
 };
 
 export const getUserPredictions = async (
-    user_id: string
+    user_id: string | undefined
 ): Promise<IUserPredictionSaved[] | []> => {
     const userPredictionsCollection = query(
         collection(db, "predictions"),
-        where("user_id", "==", user_id),
-        limit(1)
+        where("user_id", "==", user_id)
     );
 
     try {
         const res = await getDocs(userPredictionsCollection);
 
         const predictions = res.docs.map((c) => ({
+            prediction_id: c.id,
             game_id: c.data().game_id,
             local_score: c.data().result.local_score,
             visitor_score: c.data().result.visitor_score,
@@ -133,6 +141,32 @@ export const getUserPredictions = async (
     }
 };
 
+export const savePredictionInFirebase = async (
+    prediction: IGameResponse
+): Promise<void> => {
+    const predictionsCollection = collection(db, "predictions");
+
+    await addDoc(predictionsCollection, prediction);
+};
+
+export const updatePredictionInFirebase = async (prediction: IUserPredictionSaved): Promise<void> => {
+
+    const predictionRef = doc(db, "predictions", prediction.prediction_id);
+
+    await updateDoc(predictionRef, {
+        result: {
+            local_score: prediction.local_score,
+            visitor_score: prediction.visitor_score,
+            result: prediction.result
+        }
+    })
+
+}
+
+export const loadGame = async (game: Object): Promise<void> => {
+    const gamesCollection = collection(db, "games");
+    await addDoc(gamesCollection, game);
+}
 
 /* export const getCategories = async () => {
     const categoriesCollection = collection(db, "categories");

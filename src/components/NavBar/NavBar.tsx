@@ -12,8 +12,16 @@ import { useContext, useState } from 'react';
 import { AppCtx } from '../../context/ProdeContext';
 import { ProdeContextType } from '../../types/types';
 import UserIcon from "../User/UserIcon/UserIcon";
+import { Link, LinkProps } from "react-router-dom";
 
-const pages = ["Fixture", "Positions", "Rules"];
+const LinkWithoutDecoration = (props: LinkProps) => {
+    return <Link {...props} style={{ textDecoration: "none", color: "unset" }}></Link>
+};
+
+const pages = [
+    <LinkWithoutDecoration to="/positions">Positions</LinkWithoutDecoration>,
+    <LinkWithoutDecoration to="/rules">Rules</LinkWithoutDecoration>
+];
 
 const NavBar = () => {
     const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -23,7 +31,7 @@ const NavBar = () => {
     const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
-    
+
 
     const handleCloseNavMenu = () => {
         setAnchorElNav(null);
@@ -93,9 +101,9 @@ const NavBar = () => {
                                         display: { xs: "block", md: "none" },
                                     }}
                                 >
-                                    {pages.map((page) => (
-                                        <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                            <Typography textAlign="center">{page}</Typography>
+                                    {pages.map((page, index) => (
+                                        <MenuItem key={index} onClick={handleCloseNavMenu}>
+                                            <Typography textAlign="center" >{page}</Typography>
                                         </MenuItem>
                                     ))}
                                 </Menu>
@@ -112,9 +120,9 @@ const NavBar = () => {
                                 src="/qatar_logo.svg"
                             />
                             <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                                {pages.map((page) => (
+                                {pages.map((page, index) => (
                                     <Button
-                                        key={page}
+                                        key={index}
                                         onClick={handleCloseNavMenu}
                                         sx={{ my: 2, color: "white", display: "block" }}
                                     >
@@ -122,7 +130,7 @@ const NavBar = () => {
                                     </Button>
                                 ))}
                             </Box>
-                            
+
                             {userData && <UserIcon />}
                         </Toolbar>
                     </Container>

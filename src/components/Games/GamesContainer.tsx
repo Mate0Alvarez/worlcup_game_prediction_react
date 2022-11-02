@@ -1,48 +1,92 @@
-import Grid from '@mui/material/Grid';
+import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
-import {useEffect, useState, useContext} from 'react';
+import { useEffect, useState, useContext } from "react";
 import { getGames } from "../../firebase/api";
 import { IGames } from "../../interfaces/interfaces";
 import GameCard from "./GameCard";
-import {AppCtx} from '../../context/ProdeContext';
-import {ProdeContextType} from '../../types/types';
+import { AppCtx } from "../../context/ProdeContext";
+import { ProdeContextType } from "../../types/types";
+import DatePicker from "../DatePicker/DatePicker";
+import dayjs from "dayjs";
+import { Dayjs } from "dayjs";
+import * as React from "react";
+import GameSkeleton from "./GameSkeleton/GameSkeleton";
 
 const GamesContainer = (): JSX.Element | null => {
-    const [games, setGames] = useState<IGames[] | null>([]);
-    const { handleSetShowNavBar } = useContext(AppCtx) as ProdeContextType;
+    const { qatarGames, getGamesByDate, setShowNavBarAndFooter } = useContext(
+        AppCtx
+    ) as ProdeContextType;
+    const [games, setGames] = useState<IGames[] | null>(null);
+    const [dayValue, setDayValue] = React.useState<Dayjs | null>(
+        dayjs("2022-11-20")
+    );
+    const [loadingGames, setLoadingGames] = useState<boolean>(true);
+
+    const setDate = () => {
+        if (dayjs().isAfter(dayValue)) {
+            return setDayValue(dayjs());
+        }
+    };
+    const getGames = async (date: string): Promise<void> => {
+        setGames(await getGamesByDate(date));
+    };
 
     useEffect(() => {
-        handleSetShowNavBar(true);
-
-        getGames()
-            .then((result) => {
-                return setGames(result || null);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+        setDate();
+        setShowNavBarAndFooter(true);
     }, []);
+
+    useEffect(() => {
+        getGames(dayValue?.format("YYYY-MM-DD") || "");
+        if (games) {
+            setTimeout(() => {
+                setLoadingGames(false);
+            }, 500);
+        }
+    }, [qatarGames, dayValue]);
 
     return (
         <Box
             sx={{
-                backgroundColor: "primary.dark",
+                backgroundColor: "#3e0315",
                 backgroundImage: "url(/background.svg)",
                 backgroundSize: "cover",
-                minHeight: "85vh",
+                minHeight: { sx: "auto", md: "70vh" },
                 display: "flex",
                 justifyContent: "center",
-                pt: 2
+                pt: 3,
+                pb: 3,
             }}
         >
-            <Grid container maxWidth="lg" rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} >
-                {games?.map((game: IGames, index: number) => {
-                    return (
-                        <Grid xs={10} md={6} key={index} item>
-                            <GameCard game={game}></GameCard>
-                        </Grid>
-                    )
-                })}
+            <Grid
+                container
+                maxWidth="lg"
+                rowSpacing={1}
+                columnSpacing={{ xs: 1, sm: 2, md: 3 }}
+                sx={{
+                    justifyContent: "center",
+                    mb:5
+                }}
+            >
+                <Grid xs={10} md={4} item>
+                    <DatePicker
+                        dayValue={dayValue}
+                        setDayValue={setDayValue}
+                        setLoadingGames={setLoadingGames}
+                    />
+                </Grid>
+                <Grid xs={0} md={12} item></Grid>
+                {loadingGames ? (
+                    <GameSkeleton />
+                ) : (
+                    games?.map((game: IGames) => {
+                        return (
+                            <Grid xs={10} md={6} key={game.id} item>
+                                <GameCard game={game}></GameCard>
+                            </Grid>
+                        );
+                    })
+                )}
             </Grid>
         </Box>
     );

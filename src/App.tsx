@@ -7,6 +7,10 @@ import NavBar from "./components/NavBar/NavBar";
 import SignUpSide from "./components/Register/SignUp";
 import QatarTheme from "./components/themes/QatarTheme";
 import ProdeContext from "./context/ProdeContext";
+import Footer from "./components/Footer/Footer";
+import LoadGames from "./components/loadGames";
+import UnloggedRoute from "./components/ProtectedRoutes/UnloggedRoute";
+import RulesComponent from "./components/RulesComponent/RulesComponent";
 
 function App() {
   return (
@@ -15,31 +19,25 @@ function App() {
         <ThemeProvider theme={QatarTheme}>
           <NavBar></NavBar>
           <Routes>
-            <Route
-              path="/fixture"
-              element={
-                <GamesContainer />
-              }
-            />
+            <Route path="/" element={<GamesContainer />} />
+            <Route path="/loadgames" element={<LoadGames />} />
+            <Route path="/fixture" element={<GamesContainer />} />
+            <Route path="/rules" element={<RulesComponent />} />
             <Route
               path="/signin"
               element={
-                <SignInSide />
+                <UnloggedRoute component={SignInSide} />
               }
             />
             <Route
               path="/signup"
               element={
-                <SignUpSide />
+                <UnloggedRoute component={SignUpSide} />
               }
             />
-            <Route
-              path="*"
-              element={
-                <GamesContainer />
-              }
-            />
+            <Route path="*" element={<GamesContainer />} />
           </Routes>
+          <Footer />
         </ThemeProvider>
       </Router>
     </ProdeContext>

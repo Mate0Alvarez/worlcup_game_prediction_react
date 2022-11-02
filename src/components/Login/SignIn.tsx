@@ -1,9 +1,8 @@
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
+import LinearProgress from '@mui/material/LinearProgress';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
 import TextField from '@mui/material/TextField';
@@ -31,18 +30,20 @@ function Copyright(props: any) {
 
 export default function SignInSide() {
 
-    const { userData, logInUser, handleSetShowNavBar } = useContext(AppCtx) as ProdeContextType;
+    const { userData, logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
 
     const [formErrors, setFormErrors] = useState<ISignInFormErrors>({
         email: false,
         password: false
     })
     const [loginError, setLoginError] = useState<boolean>(false);
+    const [loading, setloading] = useState<boolean>(false)
 
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setloading(true);
         const data = new FormData(event.currentTarget);
 
         resetFormErrors();
@@ -59,9 +60,10 @@ export default function SignInSide() {
         const logged = await logInUser(formValidation.formData.email, formValidation.formData.password);
 
         if (!logged) {
+            setloading(false);
             return setLoginError(true);
         }
-        return navigate('/fixture');
+        return navigate('/');
     };
 
     const resetFormErrors = () => {
@@ -76,7 +78,7 @@ export default function SignInSide() {
             return navigate('/fixture');
         }
 
-        handleSetShowNavBar(false);
+        setShowNavBarAndFooter(false);
     }, [userData])
 
 
@@ -100,8 +102,21 @@ export default function SignInSide() {
                             t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                         backgroundSize: 'cover',
                         backgroundPosition: 'center',
+                        display: "flex",
+                        justifyContent:"center",
+                        alignItems:"center"
                     }}
-                />
+                >
+                <Box
+                            sx={{
+                                m: 1,
+                                width: "100%",
+                            }}
+                            component="img"
+                            alt="Ilustration of two men sitting in a sofa."
+                            src="/signin.svg"
+                        />
+                </Grid>
                 <Grid item xs={12} sm={6} md={6} component={Paper} elevation={6} square>
                     <Box
                         sx={{
@@ -151,17 +166,18 @@ export default function SignInSide() {
                                 helperText={formErrors.password && "Please enter your password"}
                                 error={formErrors.password}
                             />
-                            <FormControlLabel
-                                control={<Checkbox value="remember" color="secondary" />}
-                                label="Remember me"
-                            />
                             <Button
                                 type="submit"
                                 fullWidth
                                 variant="contained"
-                                sx={{ mt: 3, mb: 2 }}
+                                sx={{ mt: 3, mb: 2, minHeight: '40px' }}
                             >
-                                Sign In
+                                {!loading && ("Sign In")}
+                                {loading && (
+                                    <Box sx={{ width: "100%" }}>
+                                        <LinearProgress sx={{ borderRadius: 5 }} />
+                                    </Box>
+                                )}
                             </Button>
                             <Grid container>
                                 <Grid item xs>

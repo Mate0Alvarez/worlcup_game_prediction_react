@@ -11,6 +11,7 @@ export interface IGameResponse {
 }
 
 export interface IUserPredictionSaved {
+    prediction_id: string;
     local_score: string;
     visitor_score: string;
     result: string;
@@ -32,7 +33,8 @@ export interface IGames {
     visitor_code: string;
     status: string;
     final_result: string;
-    date: IFirebaseDate
+    date: string; 
+    time_stamp: IFirebaseDate;
 }
 
 export interface IUser {
@@ -54,5 +56,11 @@ export interface ISignInFormErrors {
 }
 
 export interface IProtectedRouteProps {
-    children: React.ReactNode;
+    component: React.FC;
+}
+
+export interface IPrediction {
+    id: string;
+    user_id: string;
+    game_id: string;
 }

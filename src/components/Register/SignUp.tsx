@@ -13,6 +13,7 @@ import { registerWithEmailAndPassword } from '../../firebase/api';
 import { IFormErrors } from '../../interfaces/interfaces';
 import { ProdeContextType } from '../../types/types';
 import SignUpFormValidation from './SignUpFormValidation';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function Copyright(props: any) {
     return (
@@ -35,11 +36,14 @@ export default function SignUpSide() {
         confirm_password: false
     });
 
-    const { userData, logInUser, handleSetShowNavBar } = useContext(AppCtx) as ProdeContextType;
+    const { userData, logInUser, setShowNavBarAndFooter } = useContext(AppCtx) as ProdeContextType;
+    const [loading, setloading] = useState<boolean>(false)
+
     const navigate = useNavigate();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setloading(true);
         try {
             const data = new FormData(event.currentTarget);
 
@@ -53,6 +57,7 @@ export default function SignUpSide() {
             })
 
             if (!formValidation.validForm) {
+                setloading(false);
                 return setFormErrors(formValidation.newFormErrors);
             }
 
@@ -64,6 +69,7 @@ export default function SignUpSide() {
 
         } catch (error) {
             console.error(error);
+            setloading(false);
         }
     };
 
@@ -80,7 +86,7 @@ export default function SignUpSide() {
         if (userData) {
             return navigate('/fixture');
         }
-        handleSetShowNavBar(false);
+        setShowNavBarAndFooter(false);
     }, [userData])
 
     return (
@@ -98,8 +104,21 @@ export default function SignUpSide() {
                         t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center"
                 }}
-            />
+            >
+                <Box
+                    sx={{
+                        m: 1,
+                        width: "80%",
+                    }}
+                    component="img"
+                    alt="Ilustration of 3 people sitting in a sofa."
+                    src="/signup.svg"
+                />
+            </Grid>
             <Grid item xs={12} sm={6} md={6} component={Paper} elevation={6} square>
                 <Box
                     sx={{
@@ -144,7 +163,6 @@ export default function SignUpSide() {
                             label="Email Address"
                             name="email"
                             autoComplete="email"
-                            autoFocus
                             color='secondary'
                             helperText={formErrors.email && "Please enter a valid e-mail address"}
                             error={formErrors.email}
@@ -181,8 +199,20 @@ export default function SignUpSide() {
                             variant="contained"
                             sx={{ mt: 3, mb: 2 }}
                         >
-                            Sign Up
+                            {!loading && ("Sign Up")}
+                            {loading && (
+                                <Box sx={{ width: "100%" }}>
+                                    <LinearProgress sx={{ borderRadius: 5 }} />
+                                </Box>
+                            )}
                         </Button>
+                        <Grid container>
+                            <Grid item>
+                                <Link href="/signin" variant="body2" sx={{ color: 'secondary.light' }}>
+                                    {"Do you have an account? Sign In!"}
+                                </Link>
+                            </Grid>
+                        </Grid>
                         <Copyright sx={{ mt: 5 }} />
                     </Box>
                 </Box>
