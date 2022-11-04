@@ -22,8 +22,6 @@ function App() {
           <NavBar></NavBar>
           <Routes>
             <Route path="/" element={<GamesContainer />} />
-            <Route path="/loadgames" element={<LoadGames />} />
-            <Route path="/updategames" element={<UpdateGames />} />
             <Route path="/fixture" element={<GamesContainer />} />
             <Route path="/positions" element={<PositionsComponent />} />
             <Route path="/rules" element={<RulesComponent />} />
