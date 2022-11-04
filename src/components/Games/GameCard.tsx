@@ -1,48 +1,24 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import CardActions from "@mui/material/CardActions";
-import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import dayjs from "dayjs";
 import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AppCtx } from "../../context/ProdeContext";
 import { IGames, IUserPredictionSaved } from "../../interfaces/interfaces";
 import { ProdeContextType } from "../../types/types";
+import SnackbarPush from '../utils/SnackbarPush';
 import "./GameCard.css";
-import { IGameResult, IUserPredictionResult } from "./ResultComponent/ResultComponent";
+import GameInput from "./GameInputsComponent/GameInput";
+import ResultComponent, { IGameResult, IUserPredictionResult } from "./ResultComponent/ResultComponent";
 import SavePredictionComponent from "./SavePrediction/SavePredictionComponent";
 import UpdatePredictionComponent from "./UpdatePrediction/UpdatePredictionComponent";
 import "/node_modules/flag-icons/css/flag-icons.min.css";
-import ResultComponent from "./ResultComponent/ResultComponent";
-import SnackbarPush from '../utils/SnackbarPush';
-import dayjs, { Dayjs } from "dayjs";
 
 export interface IGameCardProps {
     game: IGames;
 }
-
-export interface ICountryContainer {
-    name: string;
-    flag: string;
-}
-
-const CountryContainer = (props: ICountryContainer) => {
-    return (
-        <Box
-            sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                flexDirection: "column",
-            }}
-        >
-            <Typography variant="h6" sx={{ mb: 2 }}>
-                {props.name}
-            </Typography>
-            <div className={props.flag}></div>
-        </Box>
-    );
-};
 
 const GameCard = (props: IGameCardProps): JSX.Element => {
     const { userData, userPredictions, setGameStatus } = useContext(AppCtx) as ProdeContextType;
@@ -118,19 +94,17 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
         final_result: props.game.final_result
     }
 
-    const local_flag = `fi fi-${props.game.local_code} fis flagImage`;
-    const visitor_flag = `fi fi-${props.game.visitor_code} fis flagImage`;
     const date = new Date(props.game.time_stamp.seconds * 1000);
 
-    const controlPredictionEnabled = async (): Promise <void> => {
+    const controlPredictionEnabled = async (): Promise<void> => {
         if (props.game.status !== 'open') {
             return setPredictionEnabled(false);
         }
 
         const game_date = dayjs(props.game.time_stamp.seconds * 1000);
 
-        if (game_date.subtract(1, 'hour') <  dayjs()) {
-            await setGameStatus(props.game.id,'closed');
+        if (game_date.subtract(1, 'hour') < dayjs()) {
+            await setGameStatus(props.game.id, 'closed');
             return setPredictionEnabled(false);
         }
 
@@ -207,64 +181,14 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                         Status: {props.game.status}
                     </Typography>
                 </Box>
-
-                <Box
-                    sx={{
-                        mt: 2,
-                        display: "flex",
-                        justifyContent: "space-around",
-                        alignItems: "center",
-                    }}
-                >
-                    <CountryContainer name={props.game.local} flag={local_flag} />
-                    <Box sx={{ width: "25%" }}>
-                        <Grid container spacing={2}>
-                            <Grid xs={5} item>
-                                <TextField
-                                    hiddenLabel
-                                    id="filled-hidden-label-normal"
-                                    value={local_score}
-                                    variant="filled"
-                                    onChange={handleLocalScoreChange}
-                                    disabled={editDisabled}
-                                    inputProps={{
-                                        type: "number",
-                                        min: 0,
-                                        style: { textAlign: "center" },
-                                    }}
-                                />
-                            </Grid>
-                            <Grid
-                                xs={2}
-                                sx={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                }}
-                                item
-                            >
-                                -
-                            </Grid>
-                            <Grid xs={5} item>
-                                <TextField
-                                    hiddenLabel
-                                    id="filled-hidden-label-normal"
-                                    value={visitor_score}
-                                    variant="filled"
-                                    onChange={handleVisitorScoreChange}
-                                    disabled={editDisabled}
-                                    inputProps={{
-                                        type: "number",
-                                        min: 0,
-                                        style: { textAlign: "center" },
-                                        className: "predicitonInput",
-                                    }}
-                                />
-                            </Grid>
-                        </Grid>
-                    </Box>
-                    <CountryContainer name={props.game.visitor} flag={visitor_flag} />
-                </Box>
+                <GameInput
+                    game={props.game}
+                    local_score={local_score}
+                    visitor_score={visitor_score}
+                    editDisabled={editDisabled}
+                    handleLocalScoreChange={handleLocalScoreChange}
+                    handleVisitorScoreChange={handleVisitorScoreChange}
+                />
                 <CardActions sx={{ mt: 2, textAlign: "center" }}>
                     {props.game.status === "finished" && (
                         <ResultComponent
@@ -272,7 +196,7 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                             user_prediction_result={userPredictionResult}
                         />
                     )}
-                    {props.game.status === "open" && (
+                    {(props.game.status === "open" && userData) && (
                         <>
                             {!userPrediction && (
                                 <SavePredictionComponent
@@ -306,6 +230,15 @@ const GameCard = (props: IGameCardProps): JSX.Element => {
                                 />
                             )}
                         </>
+                    )}
+                    {(props.game.status === 'open' && !userData) && (
+                        <Typography
+                            variant="body1"
+                            color="text.primary"
+                        >
+                            <Link to="/signin" style={{ color: "#07c7cc" }}>Sign in</Link> to make your prediction
+                        </Typography>
+
                     )}
                 </CardActions>
             </Box>

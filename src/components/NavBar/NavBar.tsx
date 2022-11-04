@@ -15,7 +15,7 @@ import UserIcon from "../User/UserIcon/UserIcon";
 import { Link, LinkProps } from "react-router-dom";
 import LoginIconComponent from "../Login/LoginIconComponent";
 
-const LinkWithoutDecoration = (props: LinkProps) => {
+export const LinkWithoutDecoration = (props: LinkProps) => {
     return (
         <Link {...props} style={{ textDecoration: "none", color: "unset" }}></Link>
     );
@@ -44,8 +44,8 @@ const NavBar = () => {
         <>
             {showNavBar && (
                 <AppBar position="static">
-                    <Container maxWidth="xl">
-                        <Toolbar disableGutters>
+                    <Container maxWidth="xl" sx={{ padding: "15px 15px" }}>
+                        <Toolbar disableGutters sx={{ display: "flex", justifyContent: { xs: "space-between" } }}>
                             <Box
                                 sx={{
                                     display: { xs: "none", md: "flex" },
@@ -56,7 +56,7 @@ const NavBar = () => {
                                 alt="Qatar Wolrd Cup 2022."
                                 src="/qatar_logo.svg"
                             />
-                            <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+                            <Box sx={{ display: { xs: "flex", md: "none" } }}>
                                 <IconButton
                                     size="large"
                                     aria-label="account of current user"
@@ -95,15 +95,13 @@ const NavBar = () => {
                             <Box
                                 sx={{
                                     display: { xs: "flex", md: "none" },
-                                    mr: 10,
-                                    flexGrow: 1,
-                                    width: "40px",
+                                    height: "100px"
                                 }}
                                 component="img"
                                 alt="Qatar Wolrd Cup 2022."
-                                src="/qatar_logo.svg"
+                                src="/logo_without_text.svg"
                             />
-                            <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+                            <Box sx={{ display: { xs: "none", md: "flex" }, marginLeft: "-70%" }}>
                                 {pages.map((page, index) => (
                                     <Button
                                         key={index}
@@ -114,8 +112,10 @@ const NavBar = () => {
                                     </Button>
                                 ))}
                             </Box>
-                            {!userData && <LoginIconComponent />}
-                            {userData && <UserIcon />}
+                            <Box sx={{ alignContent: "" }}>
+                                {!userData && <LoginIconComponent />}
+                                {userData && <UserIcon />}
+                            </Box>
                         </Toolbar>
                     </Container>
                 </AppBar>

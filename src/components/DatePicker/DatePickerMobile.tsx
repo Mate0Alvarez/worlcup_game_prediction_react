@@ -13,11 +13,12 @@ const DatePickerMobile = ({dayValue, handleBack, handleChange, handleForward}:ID
         <Box
             sx={{
                 backgroundColor: "rgba(0,0,0,.4)",
+                backdropFilter: "blur(4px)",
                 color: "white",
                 borderRadius: "25px",
-                padding: "20px 35px 10px",
+                padding: "20px 10px 10px",
                 display: { xs: "flex", md: "none" },
-                justifyContent: "center",
+                justifyContent: "space-around",
                 alignItems: "center"
             }}
         >

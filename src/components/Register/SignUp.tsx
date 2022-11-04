@@ -110,6 +110,7 @@ export default function SignUpSide() {
                     sx={{
                         m: 1,
                         width: "80%",
+                        display: {xs: "none", sm:"unset"}
                     }}
                     component="img"
                     alt="Ilustration of 3 people sitting in a sofa."

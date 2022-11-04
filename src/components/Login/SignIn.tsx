@@ -107,6 +107,7 @@ export default function SignInSide() {
                             sx={{
                                 m: 1,
                                 width: "100%",
+                                display: {xs: "none", sm:"unset"}
                             }}
                             component="img"
                             alt="Ilustration of two men sitting in a sofa."
