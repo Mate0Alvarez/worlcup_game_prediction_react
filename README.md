@@ -41,7 +41,7 @@ Luego es necesario crear un proyecto en Firebase y crear una colección en Fires
 
 ##### Game example:
 ```
-item = {
+game = {
         "local": "Cameroon",
         "local_score": "-",
         "local_code": "cm",
