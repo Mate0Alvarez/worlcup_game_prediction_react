@@ -11,6 +11,7 @@ export type ProdeContextType = {
     savePrediction: (data: IGameResponse) => Promise<boolean>;
     updateUserPrediction: (prediction: IUserPredictionSaved) => Promise<boolean>;
     setShowNavBarAndFooter: (showNavBarProp: boolean) => Promise<void>;
+    getGamesFromFirebase: () => Promise<void>;
     qatarGames: IGames[];
     getGamesByDate: (date: string) => Promise<IGames[] | []>;
     getUsersWithPoints: () => Promise<IUserWithPoints[] | []>;

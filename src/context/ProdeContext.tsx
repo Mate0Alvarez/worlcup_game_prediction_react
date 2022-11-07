@@ -177,7 +177,6 @@ export const ProdeContext = ({ children }: Props) => {
     useEffect(() => {
         getUserDataFromLocalStorage();
         getUserPredictionsFromFirebase();
-        getGamesFromFirebase();
     }, [loading]);
 
     return (
@@ -192,6 +191,7 @@ export const ProdeContext = ({ children }: Props) => {
                 showNavBar,
                 showFooter,
                 setShowNavBarAndFooter,
+                getGamesFromFirebase,
                 qatarGames,
                 getGamesByDate,
                 getUsersWithPoints,

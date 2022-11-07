@@ -1,18 +1,16 @@
 import { ThemeProvider } from "@mui/material/styles";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import "./App.css";
+import Footer from "./components/Footer/Footer";
 import GamesContainer from "./components/Games/GamesContainer";
 import SignInSide from "./components/Login/SignIn";
 import NavBar from "./components/NavBar/NavBar";
+import PositionsComponent from "./components/Positions/PositionsComponent";
+import UnloggedRoute from "./components/ProtectedRoutes/UnloggedRoute";
 import SignUpSide from "./components/Register/SignUp";
+import RulesComponent from "./components/RulesComponent/RulesComponent";
 import QatarTheme from "./components/themes/QatarTheme";
 import ProdeContext from "./context/ProdeContext";
-import Footer from "./components/Footer/Footer";
-import LoadGames from "./components/loadGames";
-import UnloggedRoute from "./components/ProtectedRoutes/UnloggedRoute";
-import RulesComponent from "./components/RulesComponent/RulesComponent";
-import UpdateGames from "./components/updateGames";
-import PositionsComponent from "./components/Positions/PositionsComponent";
 
 function App() {
   return (

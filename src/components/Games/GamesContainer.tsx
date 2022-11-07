@@ -11,7 +11,7 @@ import GameCard from "./GameCard";
 import GameSkeleton from "./GameSkeleton/GameSkeleton";
 
 const GamesContainer = (): JSX.Element | null => {
-    const { qatarGames, getGamesByDate, setShowNavBarAndFooter } = useContext(
+    const { qatarGames, getGamesByDate, setShowNavBarAndFooter, getGamesFromFirebase } = useContext(
         AppCtx
     ) as ProdeContextType;
     const [games, setGames] = useState<IGames[] | null>(null);
@@ -35,6 +35,7 @@ const GamesContainer = (): JSX.Element | null => {
     useEffect(() => {
         setDate();
         setShowNavBarAndFooter(true);
+        getGamesFromFirebase();
     }, []);
 
     useEffect(() => {
