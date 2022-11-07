@@ -55,9 +55,12 @@ game = {
     }
 ```
 
+### User Auth
+Enable authentication by e-mail and password in the Firebase Authentication section. 
+
 The `users` collection will be created automatically when each user registers.
 
-Once the app is available in Firebase, having loaded games, rename the `.env.example` file located at the root of the project to `.env` and fill in the Firebase-provided configuration variables:
+Once the app is available in Firebase, having loaded games and the users authentication enabled, rename the `.env.example` file located at the root of the project to `.env` and fill in the Firebase-provided configuration variables:
 
 ```
 REACT_APP_FIREBASE_API_KEY=
@@ -85,4 +88,4 @@ The list of games and user authentication was provided by the integration with F
 ### Day.JS
 Day.JS was implemented to optimize the correct handling of dates.
 ### Flag-icons
-This library was implemented to obtain the flag icon of each of the participating countries.
+This library was implemented to obtain the flag icon of each of the participating countries using the country code stored in the game collection.
