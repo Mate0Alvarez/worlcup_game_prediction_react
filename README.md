@@ -37,7 +37,7 @@ Install all dependencies:
 npm install
 ```
 
-Luego es necesario crear un proyecto en Firebase y crear una colección en Firestore (`games`). Para realizar una carga de partidos masiva, puede implementarse el componente `<LoadGames>`.
+Then it is necessary to create a project in Firebase and create a collection in Firestore (`games`). To perform a massive game upload, the `<LoadGames>` component can be implemented.
 
 ##### Game example:
 ```
