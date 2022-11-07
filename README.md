@@ -1,46 +1,88 @@
-# Getting Started with Create React App
+# Qatar World Cup Prode
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Description
 
-## Available Scripts
+This repository contains a project created for didactic purposes only. 
 
-In the project directory, you can run:
+The App consists of a prediction game of the results of the matches played during the Qatar 2022 World Cup. 
 
-### `npm start`
+Users must register and be logged in to be able to store the results and compare the score obtained with the rest of the participants.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+You can visit the deployed project at  [https://qatarworldcup-prode.web.app/](https://qatarworldcup-prode.web.app/)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Technologies implemented
 
-### `npm test`
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) ![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white) ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white) ![MUI](https://img.shields.io/badge/MUI-%230081CB.svg?style=for-the-badge&logo=mui&logoColor=white) ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase) ![Day.js](https://img.shields.io/badge/day.js-CA4245?style=for-the-badge) ![SweetAlert2](https://img.shields.io/badge/Flag_icons-%23e4ae93.svg?style=for-the-badge)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+* [React JS](https://reactjs.org/)
+* [TypeScript](https://www.typescriptlang.org/)
+* [React Router Dom](https://reactrouter.com/)
+* [Material UI](https://mui.com/)
+* [Firebase](https://firebase.google.com/)
+* [Day.JS](https://day.js.org/)
+* [Flag-icons](https://github.com/lipis/flag-icons)
 
-### `npm run build`
+## Run project
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+You can run the project by downloading it as .zip or cloning it with:
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+git clone https://github.com/Mate0Alvarez/worlcup_game_prediction_react.git
+cd worlcup_game_prediction_react
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Install all dependencies:
 
-### `npm run eject`
+```
+npm install
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Luego es necesario crear un proyecto en Firebase y crear una colección en Firestore (`games`). Para realizar una carga de partidos masiva, puede implementarse el componente `<LoadGames>`.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+##### Game example:
+```
+item = {
+        "local": "Cameroon",
+        "local_score": "-",
+        "local_code": "cm",
+        "visitor": "Brazil",
+        "visitor_score": "-",
+        "visitor_code": "br",
+        "final_result": "-",
+        "time_stamp": "2022-12-2 16:00",
+        "status": "pending",
+        "date": "2022-12-02"
+    }
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The `users` collection will be created automatically when each user registers.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Once the app is available in Firebase, having loaded games, rename the `.env.example` file located at the root of the project to `.env` and fill in the Firebase-provided configuration variables:
 
-## Learn More
+```
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+Start server with:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```
+npm start
+```
+
+The project will run in `http://localhost:3000`
+
+## Additional comments
+
+### MaterialUI
+Material UI was chosen as the component library to streamline the application development and styling process, taking advantage of the possibility of extending the components through the use of themes.
+### Firebase
+The list of games and user authentication was provided by the integration with Firebase services.
+### Day.JS
+Day.JS was implemented to optimize the correct handling of dates.
+### Flag-icons
+This library was implemented to obtain the flag icon of each of the participating countries.
