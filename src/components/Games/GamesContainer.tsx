@@ -39,6 +39,7 @@ const GamesContainer = (): JSX.Element | null => {
     }, []);
 
     useEffect(() => {
+        setLoadingGames(true);
         getGames(dayValue?.format("YYYY-MM-DD") || "");
     }, [qatarGames, dayValue]);
 

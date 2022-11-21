@@ -15,7 +15,21 @@ export default function PositionsComponent() {
     ) as ProdeContextType;
 
     const getUserWithPointsFromContext = async (): Promise<void> => {
-        setUsersWithPoints(await getUsersWithPoints());
+
+        const users = await getUsersWithPoints();
+
+        const ordered_users = users.sort((user_a, user_b) => {
+            if (+user_a.points < +user_b.points) {
+                return 1;
+            }
+
+            if (+user_a.points > +user_b.points) {
+                return -1;
+            }
+
+            return 0;
+        })
+        setUsersWithPoints(ordered_users);
     }
 
 
